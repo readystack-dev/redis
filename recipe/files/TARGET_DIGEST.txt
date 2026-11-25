@@ -1,0 +1,7 @@
+image_manifest_digest=sha256:2383e041d63b3b3d082e72485cd1c69d82fa6d6d1906d729058ef7da82f4b3f3
+config_digest=sha256:743d5dc95890d49a7127ed43bc7f0e79cb52d6836baceb94a8ce4ecaa20f6807
+tag=readystack/redis:8.10.3-CE-ubuntu24.04-r4
+probe_port=6379
+probe_path=PING
+probe_timeout=180
+probe_exec=if [ -n "$REDIS_PASSWORD" ]; then export REDISCLI_AUTH="$REDIS_PASSWORD"; fi; case "$(redis-cli -h 127.0.0.1 -p 6379 ping)" in PONG) ;; *) exit 1 ;; esac

@@ -1,0 +1,98 @@
+{
+  "schema": "kitforge.build_recipe.v1",
+  "slug": "redis",
+  "image": "readystack/redis:8.10.3-CE-ubuntu24.04-r4",
+  "build_method": "source-rebuild-c",
+  "source": {
+    "repo": "https://github.com/redis/redis",
+    "ref": "8.10.3",
+    "build_system": "make",
+    "builder_image": "ubuntu:24.04",
+    "build_packages": [
+      "build-essential",
+      "pkg-config",
+      "libssl-dev",
+      "ca-certificates"
+    ],
+    "build_env": {
+      "BUILD_TLS": "yes"
+    },
+    "build_cmds": [
+      "make -j\"$(nproc)\" BUILD_TLS=yes",
+      "make install PREFIX=/opt/redis BUILD_TLS=yes"
+    ],
+    "install_prefix": "/opt/redis",
+    "vendored_deps": true,
+    "_build_note": "CORE build only (default `make`, SUBDIRS=src; NOT BUILD_WITH_MODULES=yes -- the Query Engine modules require a network git clone + Rust and are excluded). builder_image is ubuntu:24.04, the same distro as the runtime base (Ubuntu 24.04, gcc 13, glibc 2.39): build-essential (gcc/g++/make/libc6-dev), pkg-config and libssl-dev (for BUILD_TLS=yes) are vendored as build debs and dpkg-installed in the --network=none offline stage, so redis-server links against the same libssl3t64 the runtime installs. ALL of redis's native dependencies (jemalloc 5.3.0, lua 5.1, hiredis, hdr_histogram, fpconv, linenoise, tre, xxhash) are committed UNDER deps/ as source and compiled by the deps/Makefile that `make` invokes -> NO dependency download, the compile is fully offline-capable. dep_bumps does NOT apply to C (no module graph); the CVE-remediation lever here is the FRESH base + the debvendor dist-upgrade of libssl3t64/libc6 (Phase 2). `make install PREFIX=/usr/local` lays down redis-server + redis-cli + redis-benchmark and symlinks redis-check-rdb/redis-check-aof/redis-sentinel into PREFIX/bin. LIVE-VERIFIED: 14MB static-ish ELF redis-server (jemalloc-5.3.0), `Redis server v=8.8.0`, zero-network compile.",
+    "source_date_epoch": 1795161219,
+    "source_date_epoch_provenance": "the time release 8.10.3-CE-ubuntu24.04-r4 was cut (2026-11-20T07:53:39Z), by scripts/retarget.py --rev-bump: ReadyStack dates an image by when its release was packaged (owner 2026-11-10), recorded here once and used by every rebuild of the release; it builds upstream commit 1a2574ce1551, dated 2026-10-26T11:37:04Z (source.commit_epoch).",
+    "commit": "1a2574ce1551d3de6e0b4a56756c0fdbc6659e4f",
+    "source_date_epoch_basis": "release-cut",
+    "commit_epoch": 1793014624
+  },
+  "binaries_from_source": [
+    {
+      "name": "redis-server",
+      "out_path": "/usr/local/bin/redis-server",
+      "verify_subcmd": "--version",
+      "_note": "The daemon. `redis-server --version` -> `Redis server v=8.8.0 sha=... malloc=jemalloc-5.3.0 bits=64 build=...` (verified live). Links libssl.so.3/libcrypto.so.3 when BUILD_TLS=yes (runtime base must ship libssl.so.3: Ubuntu 24.04's libssl3t64). redis-check-rdb / redis-check-aof / redis-sentinel are install-time symlinks to this same binary."
+    },
+    {
+      "name": "redis-cli",
+      "out_path": "/usr/local/bin/redis-cli",
+      "verify_subcmd": "--version",
+      "_note": "REQUIRED in the runtime image -- it IS the health check, the seed driver, and the doc-probe client (Redis has no HTTP). `redis-cli --version` -> `redis-cli 8.8.0`."
+    }
+  ],
+  "runtime_packages": [
+    "base-files",
+    "base-passwd",
+    "ca-certificates",
+    "coreutils",
+    "dash",
+    "gcc-14-base",
+    "grep",
+    "hostname",
+    "libacl1",
+    "libattr1",
+    "libc6",
+    "libcap2",
+    "libgcc-s1",
+    "libpcre2-8-0",
+    "libselinux1",
+    "libssl3t64",
+    "openssl",
+    "sed",
+    "tar",
+    "tzdata"
+  ],
+  "runtime_base": {
+    "kind": "chisel",
+    "shell": true,
+    "tools": [
+      "sed",
+      "tar",
+      "mv",
+      "grep",
+      "id",
+      "hostname",
+      "ls"
+    ],
+    "slice_defs": [
+      "hostname"
+    ],
+    "slices": [
+      "libssl3t64_libs",
+      "libgcc-s1_libs"
+    ],
+    "provides": [
+      "redis-server",
+      "redis-cli",
+      "redis-benchmark",
+      "redis-check-rdb",
+      "redis-check-aof",
+      "redis-sentinel"
+    ],
+    "packages": "vendored/chisel/packages.tsv"
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "schema": "kitforge.source_tree_hash.v1",
+  "slug": "redis",
+  "repo": "https://github.com/redis/redis",
+  "ref": "8.10.3",
+  "commit": "1a2574ce1551d3de6e0b4a56756c0fdbc6659e4f",
+  "tree_listing_sha256": "3cc51f57686121c417ad1c10785daa1815233a26de8445924cdb7ce7a089be24",
+  "file_count": 1861
+}

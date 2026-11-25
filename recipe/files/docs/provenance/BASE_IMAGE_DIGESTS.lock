@@ -1,0 +1,2 @@
+# base images for redis (resolve at build_kit)
+ubuntu:24.04

@@ -1,0 +1,110 @@
+{
+  "apt_refresh": [
+    {
+      "min_version": "2.8.4ubuntu0.1",
+      "package": "apt",
+      "reason": "CVE-2026-109518: apt 2.8.3 -> 2.8.4ubuntu0.1"
+    },
+    {
+      "min_version": "2.8.4ubuntu0.1",
+      "package": "libapt-pkg6.0t64",
+      "reason": "CVE-2026-109518: libapt-pkg6.0t64 2.8.3 -> 2.8.4ubuntu0.1"
+    },
+    {
+      "min_version": "10.42-4ubuntu2.2",
+      "package": "libpcre2-8-0",
+      "reason": "CVE-2026-103111, CVE-2026-86145, CVE-2026-89156, CVE-2026-89157 \u2026: libpcre2-8-0 10.42-4ubuntu2.1 -> 10.42-4ubuntu2.2"
+    }
+  ],
+  "binaries_from_source": [
+    {
+      "name": "redis-server",
+      "out_path": "/usr/local/bin/redis-server",
+      "verify_subcmd": "--version"
+    },
+    {
+      "name": "redis-cli",
+      "out_path": "/usr/local/bin/redis-cli",
+      "verify_subcmd": "--version"
+    }
+  ],
+  "build_method": "source-rebuild-c",
+  "chain_id": 1172,
+  "dep_bumps": [],
+  "expected_residuals": [],
+  "images": [
+    {
+      "digest": "sha256:9c7f200c07e3d4a03e7249d2c16bf66a51120fb876aa2242cf31451412543289",
+      "ref": "ubuntu:24.04",
+      "role": "builder"
+    },
+    {
+      "digest": "sha256:9c7f200c07e3d4a03e7249d2c16bf66a51120fb876aa2242cf31451412543289",
+      "ref": "ubuntu:24.04",
+      "role": "offline_builder"
+    },
+    {
+      "digest": "sha256:9c7f200c07e3d4a03e7249d2c16bf66a51120fb876aa2242cf31451412543289",
+      "ref": "ubuntu:24.04",
+      "role": "base"
+    }
+  ],
+  "mod_replaces": [],
+  "runtime_base": {
+    "kind": "chisel",
+    "provides": [
+      "redis-server",
+      "redis-cli",
+      "redis-benchmark",
+      "redis-check-rdb",
+      "redis-check-aof",
+      "redis-sentinel"
+    ],
+    "shell": true,
+    "slice_defs": [
+      "hostname"
+    ],
+    "slices": [
+      "libssl3t64_libs",
+      "libgcc-s1_libs"
+    ],
+    "tools": [
+      "sed",
+      "tar",
+      "mv",
+      "grep",
+      "id",
+      "hostname",
+      "ls"
+    ]
+  },
+  "schema": "kitforge.toolchain_lock.v1",
+  "slug": "redis",
+  "source": {
+    "build_cmds": [
+      "make -j\"$(nproc)\" BUILD_TLS=yes",
+      "make install PREFIX=/opt/redis BUILD_TLS=yes"
+    ],
+    "build_env": {
+      "BUILD_TLS": "yes"
+    },
+    "build_packages": [
+      "build-essential",
+      "pkg-config",
+      "libssl-dev",
+      "ca-certificates"
+    ],
+    "build_system": "make",
+    "builder_image": "ubuntu:24.04",
+    "commit": "1a2574ce1551d3de6e0b4a56756c0fdbc6659e4f",
+    "commit_epoch": 1793014624,
+    "install_prefix": "/opt/redis",
+    "ref": "8.10.3",
+    "repo": "https://github.com/redis/redis",
+    "source_date_epoch": 1795161219,
+    "source_date_epoch_basis": "release-cut",
+    "source_date_epoch_provenance": "the time release 8.10.3-CE-ubuntu24.04-r4 was cut (2026-11-20T07:53:39Z), by scripts/retarget.py --rev-bump: ReadyStack dates an image by when its release was packaged (owner 2026-11-10), recorded here once and used by every rebuild of the release; it builds upstream commit 1a2574ce1551, dated 2026-10-26T11:37:04Z (source.commit_epoch).",
+    "vendored_deps": true
+  },
+  "version": "8.10.3"
+}

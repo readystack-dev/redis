@@ -1,0 +1,38 @@
+{
+  "bases": [
+    {
+      "digest": "sha256:fea12ba16096adec0f699ce1c4da2154d320450e56c1f63671f95d2a3551c77b",
+      "layout": "bases/golang_1.27.3-bookworm_972b4110ba0f.oci",
+      "ref": "golang:1.27.3-bookworm@sha256:972b4110ba0f47539a975c31e52c64765e1ff19f2d74469ae4a595c6676e80a5"
+    },
+    {
+      "digest": "sha256:9a04f13b3f80ef056361e30868593b1cfd2279fe19e4081cb93a90bf56819d6a",
+      "layout": "bases/ubuntu_24.04_9c7f200c07e3.oci",
+      "ref": "ubuntu:24.04@sha256:9c7f200c07e3d4a03e7249d2c16bf66a51120fb876aa2242cf31451412543289"
+    }
+  ],
+  "engine": {
+    "archive": "toolchain/buildkit.tar",
+    "image_digest": "sha256:e0e67ea9c4bb07bdef683e29f70f3b623d1eb9c82274a9ec04e6bb0511449fb0",
+    "kind": "buildkit",
+    "tag": "moby/buildkit:v0.31.2"
+  },
+  "inputs": {
+    "context": ".",
+    "dockerfile": "Dockerfile.offline.pinned",
+    "mtime_policy": "clamp",
+    "source_date_epoch": 1795161219,
+    "tree_hash": "sha256:ef8195d319cd7ee6908f828003e3c8d41dec236c067dadefd5ce9369511b3280"
+  },
+  "probe": {
+    "exec": "if [ -n \"$REDIS_PASSWORD\" ]; then export REDISCLI_AUTH=\"$REDIS_PASSWORD\"; fi; case \"$(redis-cli -h 127.0.0.1 -p 6379 ping)\" in PONG) ;; *) exit 1 ;; esac",
+    "port": 6379,
+    "timeout_s": 180
+  },
+  "schema": "readystack-rebuild-bundle/v0.1",
+  "subject": {
+    "config_digest": "sha256:743d5dc95890d49a7127ed43bc7f0e79cb52d6836baceb94a8ce4ecaa20f6807",
+    "image_manifest_digest": "sha256:2383e041d63b3b3d082e72485cd1c69d82fa6d6d1906d729058ef7da82f4b3f3",
+    "name": "docker.io/readystack/redis:8.10.3-CE-ubuntu24.04-r4"
+  }
+}
