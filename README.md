@@ -23,7 +23,7 @@ Single container, single self-contained C binary (redis-server) compiled from so
 
 Developers building applications that need fast access to data: caches, sessions, queues, leaderboards and real-time features.
 
-Redis is an in-memory data store and data structure server: strings, lists, sets, hashes, sorted sets, streams and JSON, with key expiry, pub/sub, and search and vector query features.
+Redis is an in-memory data store and data structure server: strings, lists, sets, hashes, sorted sets, streams and vector sets, with key expiry and pub/sub.
 
 A typical use: A busy website keeps querying its main database for the same product pages and user sessions. With Redis in front, the site caches page data with an expiry time and stores sessions in memory, so most reads skip the main database and pages return faster.
 
